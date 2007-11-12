@@ -1,0 +1,6 @@
+
+iftype pppoe
+	pppoeif bridge
+
+addressing none
+

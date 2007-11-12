@@ -1,0 +1,10 @@
+
+iftype vlan
+	vlanparentif ethernet0
+
+addressing static
+	address 10.0.0.24/24
+	address 10.0.1.24/24
+
+route 0/0 via 10.0.0.254 metric 1000
+

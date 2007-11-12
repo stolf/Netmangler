@@ -1,0 +1,100 @@
+#!/bin/sh
+# meraki's only have /bin/sh, this is going to get painful.
+
+BINDIR=/etc/netmangler/bin
+CONFDIR=/etc/netmangler/conf
+STATEDIR=/etc/netmangler/state
+LIBDIR=/etc/netmangler/lib
+
+MODULES="qos route firewall wpa"
+
+for i in $MODULES; do
+	. $LIBDIR/plugin-$i.sh
+	init_$i
+done
+echo
+
+iftype() {
+	if [ ! -r $LIBDIR/iftype-$1.sh ]; then
+		echo $IFNAME: Unknown interface type $1
+		exit 1
+	else
+		. $LIBDIR/iftype-$1.sh 
+		ONCOMPLETE="$ONCOMPLETE iftype_$1"
+	fi
+}
+
+addressing() {
+	if [ ! -r $LIBDIR/addressing-$1.sh ]; then
+		echo $IFNAME: Unknown addressing type $1
+		exit 1
+	else
+		. $LIBDIR/addressing-$1.sh 
+		ONCOMPLETE="$ONCOMPLETE addressing_$1"
+	fi
+}
+
+parentif() {
+	PARENTIFS="$PARENTIFS $1"
+	configureif $1
+	echo deconfigureif $IFNAME >>$STATEDIR/$1.deps
+}
+
+deconfigureif() {
+	if [ -f $STATEDIR/$1.if ]; then
+		if [ -f $STATEDIR/$1.deps ]; then
+			. $STATEDIR/$1.deps
+			rm -f $STATEDIR/$1.deps
+		fi
+		echo $1: Deconfiguring $1
+		(
+			IFNAME=$1
+			. $STATEDIR/$1.if 
+		)
+		rm -f $STATEDIR/$1.if
+	fi
+}
+
+configureif() {
+	(
+		IFNAME=$1
+		unset ONCOMPLETE
+		unset PARENTIFS
+		CLEANUP_CMDS=true
+
+		if [ ! -f $STATEDIR/$IFNAME.if -o $CONFDIR/$1.if -nt $STATEDIR/$IFNAME.if -o $BINDIR/netmangler -nt $STATEDIR/$1.if ]
+		then
+			deconfigureif $IFNAME
+			for i in $MODULES; do
+				newif_$i
+			done
+			. $CONFDIR/$IFNAME.if
+			for i in $ONCOMPLETE; do
+				$i
+			done
+			for i in $MODULES; do
+				do_$i
+			done
+			echo $IFNAME: cleanup cmds: $CLEANUP_CMDS
+			echo
+			echo $CLEANUP_CMDS > $STATEDIR/$IFNAME.if
+		else
+			echo $IFNAME: Skipping configured $1
+		fi
+	) || true
+}
+
+for i in $CONFDIR/*.if; do
+	configureif $(basename ${i%.if})
+done
+
+for i in $STATEDIR/*.if; do
+	(
+		IFNAME=$(basename ${i%.if})
+		if [ ! -f $CONFDIR/$IFNAME.if ]; then
+			echo $IFNAME: Deconfiguring $IFNAME
+			deconfigureif $IFNAME
+		fi
+	)
+done
+

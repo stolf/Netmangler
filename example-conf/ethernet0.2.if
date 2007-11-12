@@ -1,0 +1,6 @@
+
+iftype vlan
+	vlanparentif ethernet0
+
+addressing none
+

@@ -1,0 +1,5 @@
+
+iftype ethernet
+	mac 00:05:1C:9B:F4:78
+
+addressing none

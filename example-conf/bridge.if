@@ -1,0 +1,25 @@
+
+iftype bridge
+	brparent ethernet0.2
+	brparent ethernet0.3
+
+addressing none
+
+#queue htb default 2
+#class rate 240kbit ceil 256kbit prio 1
+#	match fwmark 1
+#	queue sfq limit 128p
+#end_class
+
+#class rate 10Mbit ceil 10Mbit prio 10
+#	match fwmark 128
+#	queue sfq limit 128p
+#end_class
+
+#route add 10.1.0.0/16 via 192.168.0.254
+#route add 0/0 via 192.168.1.254
+
+#firewall ip-filter in ACCEPT --destination-port 80
+#firewall ip-filter in REJECT
+
+#firewall ip-filter out ACCEPT
