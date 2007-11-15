@@ -1,12 +1,14 @@
 #!/bin/sh
 # meraki's only have /bin/sh, this is going to get painful.
 
-BINDIR=/etc/netmangler/bin
-CONFDIR=/etc/netmangler/conf
-STATEDIR=/etc/netmangler/state
-LIBDIR=/etc/netmangler/lib
+BINDIR=/usr/sbin
+CONFDIR=/storage/netmangler/conf
+STATEDIR=/var/run/netmangler
+LIBDIR=/usr/lib/netmangler
 
-MODULES="qos route firewall wpa"
+MODULES="route firewall wpa display"
+
+mkdir $STATEDIR -p
 
 for i in $MODULES; do
 	. $LIBDIR/plugin-$i.sh
