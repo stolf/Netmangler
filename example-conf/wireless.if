@@ -1,6 +1,6 @@
 
 iftype athsta
-	athsta_base vbase
+	athsta_base wifi0
 
 addressing dhcp
 
