@@ -80,14 +80,14 @@ do_wpa() {
 	if [ ! -z "${_wpa_driver}" ]; then
 		echo $IFNAME: wpa configuring
 		cat >/tmp/$IFNAME.wpa <<EOF
-		natwork={
+		network={
 			ssid="${_wpa_ssid}"
-			key_mgmt="${_wpa_key_mgmt}"
+			key_mgmt=${_wpa_key_mgmt}
 			identity="${_wpa_identity}"
 			password="${_wpa_password}"
-			proto="${_wpa_proto}"
-			pairwise="${_wpa_pairwise}"
-			group=${_wpa_group}"
+			proto=${_wpa_proto}
+			pairwise=${_wpa_pairwise}
+			group=${_wpa_group}
 			eap=${_wpa_eap}
 			ca_cert="${_wpa_ca_cert}"
 			client_cert="${_wpa_client_cert}"
