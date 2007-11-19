@@ -95,7 +95,7 @@ do_wpa() {
 			private_key_passwd="${_wpa_private_key_passwd}"
 		}
 EOF
-		wpa_supplicant -i$IFNAME -c /tmp/$IFNAME.wpa -P /tmp/$IFNAME.wpa_pid
+		wpa_supplicant -i$IFNAME -c /tmp/$IFNAME.wpa -P /tmp/$IFNAME.wpa_pid -B
 		CLEANUP_CMDS="kill \$(</tmp/$IFNAME.wpa_pid); $CLEANUP_CMDS"
 	fi
 }

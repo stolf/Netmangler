@@ -79,6 +79,7 @@ configureif() {
 			done
 			echo $IFNAME: cleanup cmds: $CLEANUP_CMDS
 			echo
+			touch $CONFDIR/$IFNAME.if #Perry says this is nasty. If it breaks, blame him.
 			echo $CLEANUP_CMDS > $STATEDIR/$IFNAME.if
 		else
 			echo $IFNAME: Skipping configured $1

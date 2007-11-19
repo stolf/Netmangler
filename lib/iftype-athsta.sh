@@ -4,7 +4,7 @@ athsta_base() {
 
 iftype_athsta() {
 	echo $IFNAME: Create Atheros Station
-	wlanconfig $IFNAME create nounit wlandev $PARENTIFS wlanmode sta
+	/usr/local/bin/wlanconfig $IFNAME create nounit wlandev $PARENTIFS wlanmode sta
 
 	CLEANUP_CMDS="wlanconfig $IFNAME destroy; $CLEANUP_CMDS"
 }
