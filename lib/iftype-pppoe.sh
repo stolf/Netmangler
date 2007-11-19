@@ -33,9 +33,13 @@ iftype_pppoe() {
 			noaccomp \
 			default-asyncmap \
 			user "$pppoe_user" \
+			lcp-echo-interval 30 \
+			lcp-echo-failure 5 \
+			linkname $IFNAME \
+			maxfail 0 \
+			persist \
 			plugin rp-pppoe.so $PARENTIFS \
-			linkname "$IFNAME" \
-			if-pre-up "/sbin/ip addr set $IFNAME name ' $IFNAME"
+			ifname "$IFNAME" 			
 		CLEANUP_CMDS="kill \$(</var/run/ppp-$IFNAME.pid); $CLEANUP_CMDS"
 	fi
 }
