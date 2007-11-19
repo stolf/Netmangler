@@ -22,14 +22,15 @@ iftype_pppoe() {
 		exit 1
 	else
 		echo $IFNAME: configuring pppoe interface $IFNAME on $PARENTIFS
-		echo \"$user\" \* \"$pass\" >/etc/ppp/pap-secrets
+		modprobe pppoe
+		echo \"$pppoe_user\" \* \"$pppoe_pass\" >/etc/ppp/pap-secrets
 		pppd \
 			noauth \
 			defaultroute \
 			persist \
 			noaccomp \
 			default-asyncmap \
-			user "$user" \
+			user "$pppoe_user" \
 			plugin rp-pppoe.so $PARENTIFS \
 			linkname "$IFNAME"
 		CLEANUP_CMDS="kill \$(</var/run/ppp-$IFNAME.pid); $CLEANUP_CMDS"

@@ -89,7 +89,6 @@ do_wpa() {
 			pairwise=${_wpa_pairwise}
 			group=${_wpa_group}
 			eap=${_wpa_eap}
-			ca_cert="${_wpa_ca_cert}"
 			client_cert="${_wpa_client_cert}"
 			private_key="${_wpa_private_key}"
 			private_key_passwd="${_wpa_private_key_passwd}"
