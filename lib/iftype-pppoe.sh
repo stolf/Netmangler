@@ -24,6 +24,8 @@ iftype_pppoe() {
 		echo $IFNAME: configuring pppoe interface $IFNAME on $PARENTIFS
 		modprobe pppoe
 		echo \"$pppoe_user\" \* \"$pppoe_pass\" >/etc/ppp/pap-secrets
+		echo /sbin/ip addr set \"\$IFNAME\" name \"$IFNAME\" \
+			>/etc/ppp/if-pre-up
 		pppd \
 			noauth \
 			defaultroute \
@@ -32,7 +34,8 @@ iftype_pppoe() {
 			default-asyncmap \
 			user "$pppoe_user" \
 			plugin rp-pppoe.so $PARENTIFS \
-			linkname "$IFNAME"
+			linkname "$IFNAME" \
+			if-pre-up "/sbin/ip addr set $IFNAME name ' $IFNAME"
 		CLEANUP_CMDS="kill \$(</var/run/ppp-$IFNAME.pid); $CLEANUP_CMDS"
 	fi
 }
