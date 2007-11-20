@@ -61,7 +61,7 @@ do_firewall() {
 	iptables --table filter --delete OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out;
 	iptables --table filter --delete-chain ${IFNAME}-in;
 	iptables --table filter --delete-chain ${IFNAME}-out;
-	iptables --table filter --delete INPUT --in-interface $IFNAME --jump ${IFNAME}-in
-	iptables --table filter --delete OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out
+	iptables --table filter --delete INPUT --in-interface $IFNAME --jump ${IFNAME}-in;
+	iptables --table filter --delete OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out;
 	$CLEANUP_CMDS"
 }
