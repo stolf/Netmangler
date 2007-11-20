@@ -5,6 +5,14 @@ init_firewall() {
 
 newif_firewall() {
 	FWRULES=true
+	iptables --table nat --new-chain ${IFNAME}-prerouting
+	iptables --table nat --new-chain ${IFNAME}-postrouting
+	iptables --table nat --new-chain ${IFNAME}-in
+	iptables --table nat --new-chain ${IFNAME}-out
+	iptables --table nat --insert PREROUTING --in-interface $IFNAME --jump ${IFNAME}-prerouting
+	iptables --table nat --insert POSTROUTING --out-interface $IFNAME --jump ${IFNAME}-postrouting
+	iptables --table nat --insert INPUT --in-interface $IFNAME --jump ${IFNAME}-in
+	iptables --table nat --insert OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out
 	iptables --table filter --new-chain ${IFNAME}-in
 	iptables --table filter --new-chain ${IFNAME}-out
 	iptables --table filter --insert INPUT --in-interface $IFNAME --jump ${IFNAME}-in
@@ -34,17 +42,26 @@ firewall() {
 		eb-*)
 			FWRULES="$FWRULES; ebtables --table ${table#ip-} --append $chain --jump $target $@"
 			;;
+		*)
+			echo firewall: $IFNAME: Unknown table $table
+			;;
 	esac
 }
 
 do_firewall() {
 	echo $IFNAME: fwrules: $FWRULES
 	# Execute rules
-	$FWRULES
+	eval $FWRULES
 	CLEANUP_CMDS="
+	iptables --table nat --delete INPUT --in-interface $IFNAME --jump ${IFNAME}-in;
+	iptables --table nat --delete OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out;
+	iptables --table nat --delete-chain ${IFNAME}-in;
+	iptables --table nat --delete-chain ${IFNAME}-out;
 	iptables --table filter --delete INPUT --in-interface $IFNAME --jump ${IFNAME}-in;
 	iptables --table filter --delete OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out;
 	iptables --table filter --delete-chain ${IFNAME}-in;
 	iptables --table filter --delete-chain ${IFNAME}-out;
+	iptables --table filter --delete INPUT --in-interface $IFNAME --jump ${IFNAME}-in
+	iptables --table filter --delete OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out
 	$CLEANUP_CMDS"
 }
