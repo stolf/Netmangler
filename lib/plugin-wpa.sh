@@ -95,6 +95,6 @@ do_wpa() {
 		}
 EOF
 		wpa_supplicant -i$IFNAME -c /tmp/$IFNAME.wpa -P /tmp/$IFNAME.wpa_pid -B
-		CLEANUP_CMDS="kill \$(</tmp/$IFNAME.wpa_pid); $CLEANUP_CMDS"
+		CLEANUP_CMDS="kill \$(cat /tmp/$IFNAME.wpa_pid); $CLEANUP_CMDS"
 	fi
 }
