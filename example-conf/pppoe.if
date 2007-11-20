@@ -4,3 +4,4 @@ iftype pppoe
 
 addressing none
 
+if_feature forwarding 1

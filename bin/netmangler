@@ -6,7 +6,7 @@ CONFDIR=/storage/netmangler/conf
 STATEDIR=/var/run/netmangler
 LIBDIR=/usr/lib/netmangler
 
-MODULES="route firewall wpa display"
+MODULES="route firewall wpa display feature"
 
 mkdir $STATEDIR -p
 
