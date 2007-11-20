@@ -38,8 +38,9 @@ iftype_pppoe() {
 			linkname $IFNAME \
 			maxfail 0 \
 			persist \
+			usepeerdns \
 			plugin rp-pppoe.so $PARENTIFS \
 			ifname "$IFNAME" 			
-		CLEANUP_CMDS="kill \$(cat /var/run/ppp-$IFNAME.pid); $CLEANUP_CMDS"
+		CLEANUP_CMDS="kill \$(cat /tmp/ppp-$IFNAME.pid); $CLEANUP_CMDS"
 	fi
 }
