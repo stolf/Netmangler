@@ -40,6 +40,6 @@ iftype_pppoe() {
 			persist \
 			plugin rp-pppoe.so $PARENTIFS \
 			ifname "$IFNAME" 			
-		CLEANUP_CMDS="kill \$(</var/run/ppp-$IFNAME.pid); $CLEANUP_CMDS"
+		CLEANUP_CMDS="kill \$(cat /var/run/ppp-$IFNAME.pid); $CLEANUP_CMDS"
 	fi
 }
