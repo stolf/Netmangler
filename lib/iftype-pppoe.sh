@@ -24,6 +24,7 @@ iftype_pppoe() {
 		echo $IFNAME: configuring pppoe interface $IFNAME on $PARENTIFS
 		modprobe pppoe
 		echo \"$pppoe_user\" \* \"$pppoe_pass\" >/etc/ppp/pap-secrets
+		echo \"$pppoe_user\" \* \"$pppoe_pass\" >/etc/ppp/chap-secrets
 		echo /sbin/ip addr set \"\$IFNAME\" name \"$IFNAME\" \
 			>/etc/ppp/if-pre-up
 		pppd \

@@ -1,0 +1,9 @@
+displayoptions nmbase
+iftype pppoe
+pppoeif wless
+pppoeuser username@domain
+pppoepass password
+addressing none
+firewall ip-nat postrouting MASQUERADE
+firewall ip-filter in REJECT -p tcp --dport 80 
+feature forwarding 1
