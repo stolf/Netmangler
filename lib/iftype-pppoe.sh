@@ -27,7 +27,8 @@ iftype_pppoe() {
 		echo \"$pppoe_user\" \* \"$pppoe_pass\" >/etc/ppp/chap-secrets
 		echo /sbin/ip addr set \"\$IFNAME\" name \"$IFNAME\" \
 			>/etc/ppp/if-pre-up
-		pppd \
+		pppdw \
+			/tmp/pppdw-$IFNAME.pid \
 			noauth \
 			defaultroute \
 			persist \
@@ -41,7 +42,7 @@ iftype_pppoe() {
 			persist \
 			usepeerdns \
 			plugin rp-pppoe.so $PARENTIFS \
-			ifname "$IFNAME" 			
-		CLEANUP_CMDS="kill \$(cat /tmp/ppp-$IFNAME.pid); $CLEANUP_CMDS"
+			ifname "$IFNAME" &		
+		CLEANUP_CMDS="kill \$(cat /tmp/pppdw-$IFNAME.pid); $CLEANUP_CMDS"
 	fi
 }
