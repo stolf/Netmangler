@@ -95,8 +95,15 @@ setdefaults() {
 	
 	mkdir -p $CONFDIR
 	
-	cp $DEFAULTCONFDIR/*.if $CONFDIR/	
+	cp $DEFAULTCONFDIR/* $CONFDIR/	
 	
+	makeint
+	
+	echo "Done!"
+	
+}
+
+makeint() {
 	MAC=`ip -o link | grep -E "(eth0|int)" | sed 's/.*link\/ether \([0-9:a-f]*\).*/\1/g'` 
 	
 	echo "Making default int.if for MAC $MAC"
@@ -108,9 +115,6 @@ setdefaults() {
 	echo $MAC >> $CONFDIR/int.if
 	echo "addressing static" >> $CONFDIR/int.if
 	echo "address 192.168.1.254/24" >> $CONFDIR/int.if
-	
-	echo "Done!"
-	
 }
 
 setdefaultdns() {
