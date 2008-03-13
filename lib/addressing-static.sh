@@ -3,6 +3,10 @@ address() {
 	ADDRESSES="$ADDRESSES $1"
 }
 
+dns(){
+	DNS="$DNS $1"
+}
+
 addressing_static() {
 	if [ -z "$ADDRESSES" ]; then
 		echo $IFNAME: ERROR: Missing ADDRESSES
@@ -13,6 +17,13 @@ addressing_static() {
 			ip addr add "$IPADDR" dev "$IFNAME"
 			CLEANUP_CMDS="ip addr del \"$IPADDR\" dev \"$IFNAME\" ; $CLEANUP_CMDS"
 		done
-		ip link set "$IFNAME" up
+		
+		for DNSADDR in $DNS; do
+			echo $IFNAME: adding dns server $DNSADDR
+			CLEANUP_CMDS="ip addr del \"$IPADDR\" dev \"$IFNAME\" ; $CLEANUP_CMDS"
+			echo "nameserver $DNSADDR" >> /etc/resolv.conf
+		done
+		
+		
 	fi
 }

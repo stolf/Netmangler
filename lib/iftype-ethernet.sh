@@ -15,6 +15,7 @@ iftype_ethernet() {
 		echo $IFNAME: configuring interface with mac=$MAC as $OLDNAME =\> $IFNAME
 		ip link set "$OLDNAME" down
 		ip link set "$OLDNAME" name "$IFNAME"
+		ip link set "$IFNAME" up
 		CLEANUP_CMDS="ip link set $IFNAME down; $CLEANUP_CMDS"
 	fi
 }

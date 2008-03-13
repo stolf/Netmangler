@@ -6,8 +6,9 @@ CONFDIR=/storage/netmangler/conf
 STATEDIR=/var/run/netmangler
 LIBDIR=/usr/lib/netmangler
 DEFAULTCONFDIR=/usr/etc/netmangler/defaults
+MAC=`ip -o link | grep -E "(eth0|int)" | sed 's/.*link\/ether \([0-9:a-f]*\).*/\1/g'` 
 
-MODULES="route firewall wpa display feature"
+MODULES="route firewall wpa display feature iwpriv"
 
 mkdir $STATEDIR -p
 
@@ -91,13 +92,15 @@ configureif() {
 	
 setdefaults() {
 	
-	echo "Configuration dir '$CONFDIR' didn't exist, setting defaults"
-	
 	mkdir -p $CONFDIR
 	
-	cp $DEFAULTCONFDIR/* $CONFDIR/	
+	cp $DEFAULTCONFDIR/*.if $CONFDIR/	
+	cp $DEFAULTCONFDIR/misc $CONFDIR/
 	
-	makeint
+	sed $DEFAULTCONFDIR/eth0.if.template -e "s/MAC/$MAC/" > $CONFDIR/eth0.if
+	sed $DEFAULTCONFDIR/int.if.template -e "s/MAC/$MAC/" > $CONFDIR/int.if
+	
+	cp $DEFAULTCONFDIR/dnsmasq.conf /storage/
 	
 	echo "Done!"
 	
@@ -106,31 +109,21 @@ setdefaults() {
 makeint() {
 	MAC=`ip -o link | grep -E "(eth0|int)" | sed 's/.*link\/ether \([0-9:a-f]*\).*/\1/g'` 
 	
-	echo "Making default int.if for MAC $MAC"
-
-	#make the int.if
-	echo "displayoptions nmbase" > $CONFDIR/int.if
-	echo "iftype ethernet" >> $CONFDIR/int.if
-	echo -n "mac " >> $CONFDIR/int.if
-	echo $MAC >> $CONFDIR/int.if
-	echo "addressing static" >> $CONFDIR/int.if
-	echo "address 192.168.1.254/24" >> $CONFDIR/int.if
-}
-
-setdefaultdns() {
-	
-	echo "DNSMASQ config didn't exist, setting default"
-	
+	#CPE only!
 	cp $DEFAULTCONFDIR/dnsmasq.conf /storage/
+	cp $DEFAULTCONFDIR/misc $CONFDIR/
 }
+
 
 #restore default configs if we need to
-if [ ! -f $CONFDIR/int.if ]; then
+if [ ! -d $CONFDIR ]; then
+	echo "Configuration dir '$CONFDIR' didn't exist, setting defaults"
 	setdefaults
 fi
 
-if [ ! -f /storage/dnsmasq.conf ]; then
-	setdefaultdns
+if [ $(ls -1a $CONFDIR/*.if | wc -l) -eq 0 ]; then
+	echo "Configuration dir '$CONFDIR' was empty, setting defaults"
+	setdefaults
 fi
 
 for i in $CONFDIR/*.if; do
