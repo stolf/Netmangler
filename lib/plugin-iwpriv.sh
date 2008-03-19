@@ -1,6 +1,8 @@
 init_iwpriv() {
 	echo iwpriv: Plugin loaded
-	
+}
+
+newif_iwpriv() {
 	IWPRIV_CMDS=""
 }
 
