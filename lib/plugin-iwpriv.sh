@@ -3,7 +3,7 @@ init_iwpriv() {
 }
 
 newif_iwpriv() {
-	IWPRIV_CMDS=""
+	IWPRIV_CMDS="true"
 }
 
 iwpriv_option(){
