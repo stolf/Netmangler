@@ -55,13 +55,15 @@ do_firewall() {
 	CLEANUP_CMDS="
 	iptables --table nat --delete INPUT --in-interface $IFNAME --jump ${IFNAME}-in;
 	iptables --table nat --delete OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out;
+	iptables --table nat --delete PREROUTING --in-interface $IFNAME --jump ${IFNAME}-prerouting;
+	iptables --table nat --delete POSTROUTING --out-interface $IFNAME --jump ${IFNAME}-postrouting;
 	iptables --table nat --delete-chain ${IFNAME}-in;
 	iptables --table nat --delete-chain ${IFNAME}-out;
+	iptables --table nat --delete-chain ${IFNAME}-prerouting;
+	iptables --table nat --delete-chain ${IFNAME}-postrouting;
 	iptables --table filter --delete INPUT --in-interface $IFNAME --jump ${IFNAME}-in;
 	iptables --table filter --delete OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out;
 	iptables --table filter --delete-chain ${IFNAME}-in;
 	iptables --table filter --delete-chain ${IFNAME}-out;
-	iptables --table filter --delete INPUT --in-interface $IFNAME --jump ${IFNAME}-in;
-	iptables --table filter --delete OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out;
 	$CLEANUP_CMDS"
 }
