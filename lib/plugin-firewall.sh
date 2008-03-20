@@ -5,7 +5,7 @@ init_firewall() {
 
 # Internal command to executa a command and output what failed
 _iptables() {
-	$@ || echo Failed: $@ 1>&2
+	iptables $@ || echo Failed: iptables $@ 1>&2
 }
 
 
