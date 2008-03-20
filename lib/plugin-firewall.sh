@@ -3,20 +3,26 @@ init_firewall() {
 	echo Firewall: Plugin loaded
 }
 
+# Internal command to executa a command and output what failed
+_iptables() {
+	$@ || echo Failed: $@ 1>&2
+}
+
+
 newif_firewall() {
 	FWRULES=true
-	iptables --table nat --new-chain ${IFNAME}-prerouting
-	iptables --table nat --new-chain ${IFNAME}-postrouting
-	iptables --table nat --new-chain ${IFNAME}-in
-	iptables --table nat --new-chain ${IFNAME}-out
-	iptables --table nat --insert PREROUTING --in-interface $IFNAME --jump ${IFNAME}-prerouting
-	iptables --table nat --insert POSTROUTING --out-interface $IFNAME --jump ${IFNAME}-postrouting
-	iptables --table nat --insert INPUT --in-interface $IFNAME --jump ${IFNAME}-in
-	iptables --table nat --insert OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out
-	iptables --table filter --new-chain ${IFNAME}-in
-	iptables --table filter --new-chain ${IFNAME}-out
-	iptables --table filter --insert INPUT --in-interface $IFNAME --jump ${IFNAME}-in
-	iptables --table filter --insert OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out
+	_iptables --table nat --new-chain ${IFNAME}-prerouting
+	_iptables --table nat --new-chain ${IFNAME}-postrouting
+	_iptables --table nat --new-chain ${IFNAME}-in
+	_iptables --table nat --new-chain ${IFNAME}-out
+	_iptables --table nat --insert PREROUTING --in-interface $IFNAME --jump ${IFNAME}-prerouting
+	_iptables --table nat --insert POSTROUTING --out-interface $IFNAME --jump ${IFNAME}-postrouting
+	_iptables --table nat --insert INPUT --in-interface $IFNAME --jump ${IFNAME}-in
+	_iptables --table nat --insert OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out
+	_iptables --table filter --new-chain ${IFNAME}-in
+	_iptables --table filter --new-chain ${IFNAME}-out
+	_iptables --table filter --insert INPUT --in-interface $IFNAME --jump ${IFNAME}-in
+	_iptables --table filter --insert OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out
 }
 
 # usage:
@@ -53,17 +59,17 @@ do_firewall() {
 	# Execute rules
 	eval $FWRULES
 	CLEANUP_CMDS="
-	iptables --table nat --delete INPUT --in-interface $IFNAME --jump ${IFNAME}-in;
-	iptables --table nat --delete OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out;
-	iptables --table nat --delete PREROUTING --in-interface $IFNAME --jump ${IFNAME}-prerouting;
-	iptables --table nat --delete POSTROUTING --out-interface $IFNAME --jump ${IFNAME}-postrouting;
-	iptables --table nat --delete-chain ${IFNAME}-in;
-	iptables --table nat --delete-chain ${IFNAME}-out;
-	iptables --table nat --delete-chain ${IFNAME}-prerouting;
-	iptables --table nat --delete-chain ${IFNAME}-postrouting;
-	iptables --table filter --delete INPUT --in-interface $IFNAME --jump ${IFNAME}-in;
-	iptables --table filter --delete OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out;
-	iptables --table filter --delete-chain ${IFNAME}-in;
-	iptables --table filter --delete-chain ${IFNAME}-out;
+	_iptables --table nat --delete INPUT --in-interface $IFNAME --jump ${IFNAME}-in;
+	_iptables --table nat --delete OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out;
+	_iptables --table nat --delete PREROUTING --in-interface $IFNAME --jump ${IFNAME}-prerouting;
+	_iptables --table nat --delete POSTROUTING --out-interface $IFNAME --jump ${IFNAME}-postrouting;
+	_iptables --table nat --delete-chain ${IFNAME}-in;
+	_iptables --table nat --delete-chain ${IFNAME}-out;
+	_iptables --table nat --delete-chain ${IFNAME}-prerouting;
+	_iptables --table nat --delete-chain ${IFNAME}-postrouting;
+	_iptables --table filter --delete INPUT --in-interface $IFNAME --jump ${IFNAME}-in;
+	_iptables --table filter --delete OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out;
+	_iptables --table filter --delete-chain ${IFNAME}-in;
+	_iptables --table filter --delete-chain ${IFNAME}-out;
 	$CLEANUP_CMDS"
 }
