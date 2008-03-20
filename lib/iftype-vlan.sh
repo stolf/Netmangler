@@ -3,7 +3,7 @@ vlanparentif() {
 }
 
 vlan_tag(){
-	$VLAN = $1
+	VLAN="$1"
 }
 
 iftype_vlan() {
