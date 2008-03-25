@@ -2,10 +2,22 @@
 # meraki's only have /bin/sh, this is going to get painful.
 
 BINDIR=/usr/sbin
-CONFDIR=/storage/netmangler/conf
 STATEDIR=/var/run/netmangler
 LIBDIR=/usr/lib/netmangler
-DEFAULTCONFDIR=/usr/etc/netmangler/defaults
+LOCALCONFIG=/etc/netmangler/netmangler.conf
+
+if [ -r "$LOCALCONFIG" ]; then
+	. $LOCALCONFIG
+fi
+
+if [ -z "$CONFDIR" ]; then
+	CONFDIR=/etc/netmangler/conf
+fi
+
+if [ -z "$DEFAULTCONFDIR" ]; then
+	DEFAULTCONFDIR=/usr/share/netmangler/defaults
+fi
+
 MAC=`ip -o link | grep -E "(eth0|int)" | sed 's/.*link\/ether \([0-9:a-f]*\).*/\1/g'` 
 
 MODULES="route firewall wpa display feature iwpriv"
@@ -95,7 +107,6 @@ setdefaults() {
 	mkdir -p $CONFDIR
 	
 	cp $DEFAULTCONFDIR/*.if $CONFDIR/	
-	cp $DEFAULTCONFDIR/misc $CONFDIR/
 	
 	sed $DEFAULTCONFDIR/eth0.if.template -e "s/MAC/$MAC/" > $CONFDIR/eth0.if
 	sed $DEFAULTCONFDIR/int.if.template -e "s/MAC/$MAC/" > $CONFDIR/int.if
@@ -111,7 +122,6 @@ makeint() {
 	
 	#CPE only!
 	cp $DEFAULTCONFDIR/dnsmasq.conf /storage/
-	cp $DEFAULTCONFDIR/misc $CONFDIR/
 }
 
 
