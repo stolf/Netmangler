@@ -16,11 +16,11 @@ mode() {
 standard() {
 	if [ "$*" = "auto" ]; then
 		athvap_standard=0
-	else if ["$*" = "a"]; then
+	elif [ "$*" = "a" ]; then
 		athvap_standard=1
-	else if ["$*" = "b"]; then
+	elif [ "$*" = "b" ]; then
 		athvap_standard=2
-	else if ["$*" = "g"]; then
+	elif [ "$*" = "g" ]; then
 		athvap_standard=3
 	fi
 }
@@ -40,15 +40,15 @@ iftype_athvap() {
 	/usr/local/bin/wlanconfig $IFNAME create nounit wlandev $athvap_base wlanmode $athvap_mode
 	/sbin/ip link set dev $IFNAME up
 	
-	if [ "$athvap_standard" ]; then
+	if [ -n "$athvap_standard" ]; then
 		iwpriv $IFNAME mode $athvap_standard
 	fi
 
-	if ["$athvap_ani"]; then
+	if [ -n "$athvap_ani" ]; then
 		echo "$athvap_ani" > /proc/sys/dev/${athvap_base}/intmit
 	fi
 
-	if ["$athvap_distance"]; then
+	if [ -n "$athvap_distance" ]; then
 		athctrl -i $athvap_base -d $athvap_distance
 	fi
 

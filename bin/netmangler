@@ -20,7 +20,7 @@ fi
 
 MAC=`ip -o link | grep -E "(eth0|int)" | sed 's/.*link\/ether \([0-9:a-f]*\).*/\1/g'` 
 
-MODULES="route firewall wpa display feature iwpriv"
+MODULES="route firewall wpa display feature iwpriv wireless"
 
 mkdir $STATEDIR -p
 
