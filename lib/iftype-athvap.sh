@@ -35,6 +35,16 @@ distance() {
 	athvap_distance="$*"
 }
 
+# Enable or disable four-frame (WDS) mode
+wds() {
+	athvap_wds="$*"
+}
+
+# Add a peer MAC for WDS
+wds_mac() {
+	athvap_wdsmac="$*"
+}
+
 iftype_athvap() {
 	echo $IFNAME: Create Atheros VAP
 	/usr/local/bin/wlanconfig $IFNAME create nounit wlandev $athvap_base wlanmode $athvap_mode
@@ -49,7 +59,15 @@ iftype_athvap() {
 	fi
 
 	if [ -n "$athvap_distance" ]; then
-		athctrl -i $athvap_base -d $athvap_distance
+		/usr/local/bin/athctrl -i $athvap_base -d $athvap_distance
+	fi
+
+	if [ -n "$athvap_wds" ]; then
+		iwpriv $IFNAME wds $athvap_wds
+	fi
+
+	if [ -n "$athvap_wdsmac" ]; then
+		iwpriv $IFNAME wds_add $athvap_wdsmac
 	fi
 
 	CLEANUP_CMDS="wlanconfig $IFNAME destroy; $CLEANUP_CMDS"
