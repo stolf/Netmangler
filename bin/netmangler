@@ -36,6 +36,7 @@ iftype() {
 		exit 1
 	else
 		. $LIBDIR/iftype-$1.sh 
+		IFTYPE=$1
 		ONCOMPLETE="$ONCOMPLETE iftype_$1"
 	fi
 }

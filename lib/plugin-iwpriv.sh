@@ -11,6 +11,15 @@ iwpriv_option(){
 }
 
 do_iwpriv() {
+	case "$IFTYPE" in
+		athvap) ;;
+		athmaster) ;;
+		ahdemo) ;;
+		athsta) ;;
+		*) 
+			echo iwpriv: Interface $IFTYPE is not supported
+			;;
+	esac
 	eval $IWPRIV_CMDS
 }
 
