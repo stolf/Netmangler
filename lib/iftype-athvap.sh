@@ -42,7 +42,7 @@ wds() {
 
 # Add a peer MAC for WDS
 wds_mac() {
-	athvap_wdsmac="$*"
+	athvap_wdsmac="$athvap_wdsmac $1"
 }
 
 iftype_athvap() {
@@ -66,9 +66,10 @@ iftype_athvap() {
 		iwpriv $IFNAME wds $athvap_wds
 	fi
 
-	if [ -n "$athvap_wdsmac" ]; then
-		iwpriv $IFNAME wds_add $athvap_wdsmac
-	fi
+	for WDSMAC in $athvap_wdsmac; do
+		echo $IFNAME: Adding WDS MAC $WDSMAC
+		iwpriv $IFNAME wds_add $WDSMAC
+	done
 
 	CLEANUP_CMDS="wlanconfig $IFNAME destroy; $CLEANUP_CMDS"
 }
