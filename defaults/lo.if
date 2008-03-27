@@ -1,4 +1,0 @@
-iftype loopback
-addressing static
-	address 127.0.0.1/8
-
