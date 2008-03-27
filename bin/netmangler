@@ -14,12 +14,6 @@ if [ -z "$CONFDIR" ]; then
 	CONFDIR=/etc/netmangler/conf
 fi
 
-if [ -z "$DEFAULTCONFDIR" ]; then
-	DEFAULTCONFDIR=/usr/share/netmangler/defaults
-fi
-
-MAC=`ip -o link | grep -E "(eth0|int)" | sed 's/.*link\/ether \([0-9:a-f]*\).*/\1/g'` 
-
 MODULES="route firewall wpa display feature iwpriv wireless"
 
 mkdir $STATEDIR -p
@@ -101,37 +95,7 @@ configureif() {
 		fi
 	) || true
 }
-
 	
-setdefaults() {
-	
-	mkdir -p $CONFDIR
-	
-	cp $DEFAULTCONFDIR/*.if $CONFDIR/	
-	
-	sed $DEFAULTCONFDIR/eth0.if.template -e "s/MAC/$MAC/" > $CONFDIR/eth0.if
-	sed $DEFAULTCONFDIR/int.if.template -e "s/MAC/$MAC/" > $CONFDIR/int.if
-	
-	echo "Done!"
-	
-}
-
-makeint() {
-	MAC=`ip -o link | grep -E "(eth0|int)" | sed 's/.*link\/ether \([0-9:a-f]*\).*/\1/g'` 
-}
-
-
-#restore default configs if we need to
-if [ ! -d $CONFDIR ]; then
-	echo "Configuration dir '$CONFDIR' didn't exist, setting defaults"
-	setdefaults
-fi
-
-if [ $(ls -1a $CONFDIR/*.if | wc -l) -eq 0 ]; then
-	echo "Configuration dir '$CONFDIR' was empty, setting defaults"
-	setdefaults
-fi
-
 for i in $CONFDIR/*.if; do
 	configureif $(basename ${i%.if})
 done
