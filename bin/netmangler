@@ -112,17 +112,12 @@ setdefaults() {
 	sed $DEFAULTCONFDIR/eth0.if.template -e "s/MAC/$MAC/" > $CONFDIR/eth0.if
 	sed $DEFAULTCONFDIR/int.if.template -e "s/MAC/$MAC/" > $CONFDIR/int.if
 	
-	cp $DEFAULTCONFDIR/dnsmasq.conf /storage/
-	
 	echo "Done!"
 	
 }
 
 makeint() {
 	MAC=`ip -o link | grep -E "(eth0|int)" | sed 's/.*link\/ether \([0-9:a-f]*\).*/\1/g'` 
-	
-	#CPE only!
-	cp $DEFAULTCONFDIR/dnsmasq.conf /storage/
 }
 
 
