@@ -46,7 +46,7 @@ wds_mac() {
 }
 
 iftype_athvap() {
-	echo $IFNAME: Create Atheros VAP
+	echo "${IFNAME}: Create Atheros VAP (${athvap_mode})"
 	/usr/local/bin/wlanconfig $IFNAME create nounit wlandev $athvap_base wlanmode $athvap_mode
 	/sbin/ip link set dev $IFNAME up
 	
@@ -67,7 +67,6 @@ iftype_athvap() {
 	fi
 
 	for WDSMAC in $athvap_wdsmac; do
-		echo $IFNAME: Adding WDS MAC $WDSMAC
 		iwpriv $IFNAME wds_add $WDSMAC
 	done
 
