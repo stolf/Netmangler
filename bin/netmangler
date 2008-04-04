@@ -63,6 +63,7 @@ deconfigureif() {
 			. $STATEDIR/$1.if 
 		)
 		rm -f $STATEDIR/$1.if
+		echo configureif $1 >>$STATEDIR/TODO
 	fi
 }
 
@@ -99,6 +100,11 @@ configureif() {
 for i in $CONFDIR/*.if; do
 	configureif $(basename ${i%.if})
 done
+
+if [ -f $STATEDIR/TODO ]; then
+	. $STATEDIR/TODO
+	rm -f $STATEDIR/TODO
+fi
 
 for i in $STATEDIR/*.if; do
 	(
