@@ -12,7 +12,7 @@ essid() {
 
 iftype_athmaster() {
 	echo $IFNAME: Create Atheros Master
-	/usr/local/bin/wlanconfig $IFNAME create nounit wlandev $PARENTIFS wlanmode master
+	/usr/bin/wlanconfig $IFNAME create nounit wlandev $PARENTIFS wlanmode master
 	/sbin/iwconfig $IFNAME essid $athmaster_essid channel $athmaster_chan
 	/sbin/ip link set dev $IFNAME up
 

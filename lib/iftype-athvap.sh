@@ -47,7 +47,7 @@ wds_mac() {
 
 iftype_athvap() {
 	echo "${IFNAME}: Create Atheros VAP (${athvap_mode})"
-	/usr/local/bin/wlanconfig $IFNAME create nounit wlandev $athvap_base wlanmode $athvap_mode
+	/usr/bin/wlanconfig $IFNAME create nounit wlandev $athvap_base wlanmode $athvap_mode
 	/sbin/ip link set dev $IFNAME up
 	
 	if [ -n "$athvap_standard" ]; then
@@ -59,7 +59,7 @@ iftype_athvap() {
 	fi
 
 	if [ -n "$athvap_distance" ]; then
-		/usr/local/bin/athctrl -i $athvap_base -d $athvap_distance
+		/usr/bin/athctrl -i $athvap_base -d $athvap_distance
 	fi
 
 	if [ -n "$athvap_wds" ]; then

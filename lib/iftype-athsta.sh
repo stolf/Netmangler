@@ -4,7 +4,7 @@ athsta_base() {
 
 iftype_athsta() {
 	echo $IFNAME: Create Atheros Station
-	/usr/local/bin/wlanconfig $IFNAME create nounit wlandev $PARENTIFS wlanmode sta
+	/usr/bin/wlanconfig $IFNAME create nounit wlandev $PARENTIFS wlanmode sta
 	
 	ip link set "$IFNAME" up
 

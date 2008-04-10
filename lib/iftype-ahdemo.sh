@@ -4,7 +4,7 @@ ahdemo_base() {
 
 iftype_ahdemo() {
 	echo $IFNAME: Create ahdemo interface
-	/usr/local/bin/wlanconfig $IFNAME create nounit wlandev $PARENTIFS wlanmode ahdemo
+	/usr/bin/wlanconfig $IFNAME create nounit wlandev $PARENTIFS wlanmode ahdemo
 	
 	ip link set "$IFNAME" up
 
