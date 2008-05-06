@@ -11,7 +11,7 @@ newif_wireless() {
 }
 
 wireless_essid(){
-	WIRELESS_CMDS="$WIRELESS_CMDS ; iwconfig $IFNAME essid $*"
+	WIRELESS_CMDS="$WIRELESS_CMDS ; iwconfig $IFNAME essid \"$*\""
 }
 
 wireless_channel() {
