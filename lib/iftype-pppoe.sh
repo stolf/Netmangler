@@ -43,6 +43,6 @@ iftype_pppoe() {
 			usepeerdns \
 			plugin rp-pppoe.so $PARENTIFS \
 			ifname "$IFNAME" & > /dev/null		
-		CLEANUP_CMDS="kill \$(cat /tmp/pppdw-$IFNAME.pid); kill \$(cat /tmp/ppp-$IFNAME.pid); $CLEANUP_CMDS"
+		CLEANUP_CMDS="kill -9 \$(cat /tmp/pppdw-$IFNAME.pid); kill -9 \$(cat /tmp/ppp-$IFNAME.pid); $CLEANUP_CMDS"
 	fi
 }
