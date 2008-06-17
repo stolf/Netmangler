@@ -11,12 +11,29 @@ _iptables() {
 
 newif_firewall() {
 	FWRULES=true
+
+	# mangle table rules
+	_iptables --table mangle --new-chain ${IFNAME}-prerouting
+	_iptables --table mangle --insert PREROUTING --in-interface $IFNAME --jump ${IFNAME}-prerouting
+
+	_iptables --table mangle --new-chain ${IFNAME}-in
+	_iptables --table mangle --insert INPUT --in-interface $IFNAME --jump ${IFNAME}-in
+
+	_iptables --table mangle --new-chain ${IFNAME}-out
+	_iptables --table mangle --insert OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out
+
+	_iptables --table mangle --new-chain ${IFNAME}-postrouting
+	_iptables --table mangle --insert POSTROUTING --out-interface $IFNAME ${IFNAME}-postrouting
+
+	# NAT table rule
 	_iptables --table nat --new-chain ${IFNAME}-prerouting
 	_iptables --table nat --new-chain ${IFNAME}-postrouting
 	_iptables --table nat --new-chain ${IFNAME}-out
 	_iptables --table nat --insert PREROUTING --in-interface $IFNAME --jump ${IFNAME}-prerouting
 	_iptables --table nat --insert POSTROUTING --out-interface $IFNAME --jump ${IFNAME}-postrouting
 	_iptables --table nat --insert OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out
+
+	# Filter table rules
 	_iptables --table filter --new-chain ${IFNAME}-in
 	_iptables --table filter --new-chain ${IFNAME}-out
 	_iptables --table filter --insert INPUT --in-interface $IFNAME --jump ${IFNAME}-in
