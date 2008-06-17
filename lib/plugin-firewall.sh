@@ -58,10 +58,10 @@ firewall() {
 			FWRULES="$FWRULES; iptables --table ${table#ip-} --append $chain --jump $target $@"
 			;;
 		ip6-*)
-			FWRULES="$FWRULES; iptables6 --table ${table#ip-} --append $chain --jump $target $@"
+			FWRULES="$FWRULES; iptables6 --table ${table#ip6-} --append $chain --jump $target $@"
 			;;
 		eb-*)
-			FWRULES="$FWRULES; ebtables --table ${table#ip-} --append $chain --jump $target $@"
+			FWRULES="$FWRULES; ebtables --table ${table#eb-} --append $chain --jump $target $@"
 			;;
 		*)
 			echo firewall: $IFNAME: Unknown table $table
