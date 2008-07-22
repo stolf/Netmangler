@@ -48,6 +48,12 @@ wds_mac() {
 iftype_athvap() {
 	echo "${IFNAME}: Create Atheros VAP (${athvap_mode})"
 	/usr/bin/wlanconfig $IFNAME create nounit wlandev $athvap_base wlanmode $athvap_mode
+
+	# This comes from the mtu plugin
+	if [ ! -z "${MTU}" ]; then
+		/sbin/ip link set mtu ${MTU} dev $IFNAME
+	fi
+	
 	/sbin/ip link set dev $IFNAME up
 	
 	if [ -n "$athvap_standard" ]; then
