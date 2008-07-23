@@ -11,4 +11,5 @@ mtu() {
 }
 
 do_mtu() {
+	eval true
 }
