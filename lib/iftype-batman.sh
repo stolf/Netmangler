@@ -4,6 +4,14 @@ bmparent() {
 
 iftype_batman() {
 	echo $IFNAME: Create B.A.T.M.A.N interface
+	
+	if [ -z "${PARENTIFS}" ]; then
+		echo $IFNAME: No B.A.T.M.A.N devices.
+		return
+	fi
+
+	/sbin/modprobe batman-adv-core
+	
 	for i in $PARENTIFS; do
 		echo $IFNAME: Adding $i to B.A.T.M.A.N
 		ip link set "$i" up
