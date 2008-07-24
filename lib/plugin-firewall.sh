@@ -23,14 +23,11 @@ newif_firewall() {
 	_iptables --table mangle --new-chain ${IFNAME}-firewall-out
 
 	_iptables --table mangle --insert PREROUTING --in-interface $IFNAME --jump ${IFNAME}-prerouting
-
 	_iptables --table mangle --insert INPUT --in-interface $IFNAME --jump ${IFNAME}-in
-
 	_iptables --table mangle --insert OUTPUT --out-interface $IFNAME --jump ${IFNAME}-out
-
-	_iptables --table mangle --insert POSTROUTING --out-interface $IFNAME ${IFNAME}-postrouting
-	_iptables --table mangle --insert FORWARD --in-interface $IFNAME ${IFNAME}-forward-in
-	_iptables --table mangle --insert forward-out --out-interface $IFNAME ${IFNAME}-forward-out
+	_iptables --table mangle --insert POSTROUTING --out-interface $IFNAME --jump ${IFNAME}-postrouting
+	_iptables --table mangle --insert FORWARD --in-interface $IFNAME --jump ${IFNAME}-forward-in
+	_iptables --table mangle --insert forward-out --out-interface $IFNAME --jump ${IFNAME}-forward-out
 
 	# NAT table rule
 	_iptables --table nat --new-chain ${IFNAME}-prerouting
