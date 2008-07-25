@@ -19,8 +19,8 @@ newif_firewall() {
 	_iptables --table mangle --new-chain ${IFNAME}-in
 	_iptables --table mangle --new-chain ${IFNAME}-out
 	_iptables --table mangle --new-chain ${IFNAME}-postrouting
-	_iptables --table mangle --new-chain ${IFNAME}-firewall-in
-	_iptables --table mangle --new-chain ${IFNAME}-firewall-out
+	_iptables --table mangle --new-chain ${IFNAME}-forward-in
+	_iptables --table mangle --new-chain ${IFNAME}-forward-out
 
 	_iptables --table mangle --insert PREROUTING --in-interface $IFNAME --jump ${IFNAME}-prerouting
 	_iptables --table mangle --insert INPUT --in-interface $IFNAME --jump ${IFNAME}-in
