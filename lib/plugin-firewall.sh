@@ -61,7 +61,7 @@ firewall() {
 	shift
 	target=$1
 	shift
-	if [ "$chain" == "${IFNAME}-forward-in" -a "$target" == "ACCEPT"]; then
+	if [ "$chain" == "${IFNAME}-forward-in" -a "$target" == "ACCEPT" ]; then
 		target="forward-out"
 	fi
 	case $table in
