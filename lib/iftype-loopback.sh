@@ -4,4 +4,5 @@ iftype_loopback() {
 		echo $IFNAME: Creating $IFNAME
 		ip link set name $IFNAME dev lo
 	fi
+	ip link set up dev $IFNAME
 }
