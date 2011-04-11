@@ -14,7 +14,7 @@ if [ -z "$CONFDIR" ]; then
 	CONFDIR=/etc/netmangler/conf
 fi
 
-MODULES="route firewall wpa display feature iwpriv wireless mtu"
+MODULES="route firewall wpa display feature iwpriv wireless mtu hostapd"
 
 mkdir $STATEDIR -p
 
